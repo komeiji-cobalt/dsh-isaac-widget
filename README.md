@@ -6,6 +6,8 @@
 
 ![效果预览](docs/preview.png)
 
+**Release 下载**：[`dsh-isaac-widget-0.1.0.zip`](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases/download/v0.1.0/dsh-isaac-widget-0.1.0.zip) · [全部 Releases](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
+
 ## 它是什么
 
 一个 **DSH Web / 桌面端通用的右下角挂件**，基于 [`dsh-whale-widget`](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) 魔改：
