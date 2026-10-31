@@ -1,6 +1,6 @@
 {
   "name": "dsh-isaac-widget",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "以撒 DSH 小挂件：右下角透明 Isaac 动图，点击播放 HurtGrunt 并弹出蜘蛛思考泡泡；基于 dsh-whale-widget 魔改，支持角色/音效/泡泡自定义。",
   "keywords": [
     "dsh",
@@ -39,3 +39,4 @@
   },
   "license": "MIT"
 }
+

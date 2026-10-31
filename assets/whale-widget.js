@@ -19713,6 +19713,12 @@ var releaseAudio = null
 var pressing = false
 var pressEnded = false
 var releasePlayed = false
+// Isaac 点击音池：前 5 次只放 HurtGrunt；之后每次点击按递增概率抽 Isaac Dies，
+// 播完一条 Dies 后计数归零，回到 HurtGrunt。自定义音效组仍走原逻辑。
+var isaacClickCount = 0
+var isaacPressPool = []
+var isaacDeathPool = []
+var isaacPoolSig = ''
 // v745：不再需要 releaseTimer —— 点按时由 playReleaseAt() 在**音频线程**排期（见 pressUp）
 // —— v752：本体按压/松开音改走「片段路由」——
 // 起因：issue 里那台机器上 /dsh-whale/sound/press.mp3?set=… 会被本机的一层东西（代理/安全软件）
@@ -19762,10 +19768,95 @@ function applySoundSet() {
     // ⚠️ 不变式：这里预热的 URL 必须与上面建元素用的 URL **逐字符相同**（同一个变量，不再各写一遍字面量）——
     //    一旦"预热 A、播放 B"，点按就会退回异步解码路径，手感立刻变钝（0.3.3 那次"变钝"的根因）。
     dshwvWarm([pu.empty ? '' : pu.url, ru.empty ? '' : ru.url])
+    try { buildIsaacSoundPools() } catch (err) {}
   } catch (err) {}
 }
+
+function isaacPoolAudio(fragId) {
+  var el = dshwvSound('/dsh-whale/audio-fragment?id=' + encodeURIComponent(fragId))
+  el.preload = 'auto'
+  el.volume = soundVol
+  return el
+}
+
+function buildIsaacSoundPools() {
+  try {
+    if (!Array.isArray(audioFragments) || !audioFragments.length) return
+    var hurt = []
+    var dies = []
+    for (var i = 0; i < audioFragments.length; i++) {
+      var f = audioFragments[i]
+      if (!f || !f.id) continue
+      var id = String(f.id)
+      var name = String(f.name || '')
+      if (/^hurt[\s_-]*grunt/i.test(id) || /^hurt[\s_-]*grunt/i.test(name)) hurt.push(id)
+      else if (/^isaac[\s_-]*dies[\s_-]*new/i.test(id) || /^isaac[\s_-]*dies[\s_-]*new/i.test(name)) dies.push(id)
+    }
+    var sig = hurt.join('|') + '#' + dies.join('|')
+    if (sig === isaacPoolSig) return
+    isaacPoolSig = sig
+    isaacPressPool = hurt.map(isaacPoolAudio)
+    isaacDeathPool = dies.map(isaacPoolAudio)
+    var urls = []
+    for (var h = 0; h < isaacPressPool.length; h++) urls.push(isaacPressPool[h].src)
+    for (var d = 0; d < isaacDeathPool.length; d++) urls.push(isaacDeathPool[d].src)
+    dshwvWarm(urls)
+  } catch (err) {}
+}
+
+function playIsaacPoolSound() {
+  try {
+    if (soundSet !== 'isaac_grunt') return false
+    if (!isaacPressPool.length && !isaacDeathPool.length) return false
+
+    isaacClickCount++
+    var useDeath = false
+    if (isaacClickCount > 5 && isaacDeathPool.length) {
+      // 第 6 次起：18%、36%、54%、72%、80%……；点到死亡音后归零重来。
+      var chance = Math.min(0.8, 0.18 * (isaacClickCount - 5))
+      useDeath = Math.random() < chance
+    }
+    var pool = useDeath ? isaacDeathPool : isaacPressPool
+    if (!pool.length) pool = isaacPressPool.length ? isaacPressPool : isaacDeathPool
+    if (!pool.length) return false
+
+    var chosen = pool[Math.floor(Math.random() * pool.length)]
+    if (!chosen) return false
+
+    var all = isaacPressPool.concat(isaacDeathPool)
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i]
+      if (!el || el === chosen) continue
+      try {
+        el.onended = null
+        el.pause()
+        el.currentTime = 0
+      } catch (err) {}
+    }
+    if (releaseAudio) {
+      try { releaseAudio.pause(); releaseAudio.currentTime = 0 } catch (err) {}
+    }
+    pressEnded = false
+    releasePlayed = false
+    pressAudio = chosen
+    chosen.volume = soundVol
+    chosen.onended = function () {
+      pressEnded = true
+      if (!pressing && !releasePlayed) playRelease()
+    }
+    chosen.currentTime = 0
+    var p = chosen.play()
+    if (p && typeof p.catch === 'function') p.catch(function () {})
+    if (useDeath) isaacClickCount = 0
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
 function playPress() {
   if (!soundOn) return
+  if (playIsaacPoolSound()) return
   // v729 修复：**本轮状态复位必须放在「按压槽留空」分支之前**。
   // 原实现里 pressAudio 为空时直接 return，跳过了 releasePlayed = false；而 playRelease()
   // 一旦把 releasePlayed 置为 true 就再没有任何地方复位它 → 结果是只有第一次松开有声音，

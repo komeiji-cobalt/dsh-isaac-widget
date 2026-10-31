@@ -1,20 +1,14 @@
 {
   "version": 1,
   "fragments": [
-    {
-      "id": "hurt_grunt",
-      "name": "HurtGrunt",
-      "createdAt": 1793425065293
-    }
+    {"id": "hurt_grunt", "name": "HurtGrunt", "createdAt": 1793425065293},
+    {"id": "hurt_grunt_1", "name": "HurtGrunt 1", "createdAt": 1793425065293},
+    {"id": "hurt_grunt_2", "name": "HurtGrunt 2", "createdAt": 1793425065293},
+    {"id": "isaac_dies_new", "name": "Isaac Dies 1", "createdAt": 1793425065293},
+    {"id": "isaac_dies_new_1", "name": "Isaac Dies 2", "createdAt": 1793425065293},
+    {"id": "isaac_dies_new_2", "name": "Isaac Dies 3", "createdAt": 1793425065293}
   ],
   "groups": [
-    {
-      "id": "isaac_grunt",
-      "name": "以撒·受伤",
-      "press": "hurt_grunt",
-      "release": "",
-      "pinnedAt": 1793425065293,
-      "createdAt": 1793425065293
-    }
+    {"id": "isaac_grunt", "name": "以撒·受伤", "press": "hurt_grunt", "release": "", "pinnedAt": 1793425065293, "createdAt": 1793425065293}
   ]
 }

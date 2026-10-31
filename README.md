@@ -1,23 +1,30 @@
 # dsh-isaac-widget
 
-> 以撒住进 DeepSeek Harness 的右下角。透明像素动图、点击 `HurtGrunt`、抬头冒出一只蜘蛛的思考泡泡。
+> 以撒住进 DeepSeek Harness 的右下角。透明像素动图、点击随机 `HurtGrunt`（点多了变 Isaac Dies 呃啊）、抬头冒出一只蜘蛛的思考泡泡。
 >
 > 复刻自小红书：<https://xhslink.cn/o/6dsgqEKAm62>
 
 ![效果预览](docs/preview.png)
 
-**Release 下载**：[`dsh-isaac-widget-0.1.0.zip`](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases/download/v0.1.0/dsh-isaac-widget-0.1.0.zip) · [全部 Releases](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
+**Release 下载**：[`dsh-isaac-widget-0.1.1.zip`](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases/download/v0.1.1/dsh-isaac-widget-0.1.1.zip) · [全部 Releases](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
 
 ## 它是什么
 
 一个 **DSH Web / 桌面端通用的右下角挂件**，基于 [`dsh-whale-widget`](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) 魔改：
 
 - **主形象**：512×400 透明 Isaac GIF，抱着笔记本
-- **点击音**：以撒 Wiki 的 `Hurt grunt.wav`（0.38 秒）
+- **点击音**：前 5 次从 `HurtGrunt` 1/2/原版里随机；第 6 次起按递增概率随机播放 `Isaac Dies New` 1/2/3，播完一条死亡音后计数归零
 - **点击泡泡**：白色思考泡泡 + 一只红色蜘蛛（4 帧小动画）
 - **位置**：右下角，默认留 12px / 8px 边距
 - **可改**：角色图、按压音效、泡泡内容、大小、吸附、余额显示等
 - 原插件的余额 / 记账能力保留，但默认关闭了每轮消耗提示，避免打扰
+
+### 随机点击音
+
+- 第 1–5 次点击：只从 `HurtGrunt`、`HurtGrunt 1`、`HurtGrunt 2` 中随机
+- 第 6 次起：每次点击按 `18% / 36% / 54% / 72% / 80%` 递增概率抽一条 `Isaac Dies New`（3 条随机）
+- 播到 `Isaac Dies New` 后计数归零，回到 HurtGrunt，避免一直“呃啊”
+- 切到别的音效组（如小黄鸭）时，恢复原插件的普通按压音逻辑
 
 ## 一键安装（给 Agent 的指令）
 
@@ -32,7 +39,7 @@
 2. 否则克隆仓库，在仓库根目录执行：
    powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Profile desktop
 3. 不要强制结束正在运行的 DSH；安装完成后告诉我“需要完全退出 DSH（含托盘）再重开”。
-4. 重开后确认：右下角出现以撒；点击后出现蜘蛛思考泡泡并播放 HurtGrunt。
+4. 重开后确认：右下角出现以撒；点击后出现蜘蛛思考泡泡，并随机播放 HurtGrunt；多点几下会随机变成 Isaac Dies 的“呃啊”。
 ```
 
 Windows 上也可以直接跑远程脚本：
@@ -92,7 +99,8 @@ dsh plugin --profile web add github:komeiji-cobalt/dsh-isaac-widget
 | 用途 | 来源 | 说明 |
 |---|---|---|
 | 主形象 | [Pinterest / GIPHY：Angry The Binding Of Isaac Sticker](https://www.pinterest.com/pin/676665912796172781/) | 512×400 透明 GIF，本地文件 `defaults/whale-roles/isaac.gif` |
-| 点击音效 | [The Binding of Isaac: Rebirth Wiki — File:Hurt grunt.wav](https://bindingofisaacrebirth.wiki.gg/wiki/File:Hurt_grunt.wav) | 0.38 秒，本地文件 `defaults/whale-audio/hurt_grunt.wav` |
+| 点击音效 | [The Binding of Isaac: Rebirth Wiki — File:Hurt grunt.wav](https://bindingofisaacrebirth.wiki.gg/wiki/File:Hurt_grunt.wav) | `hurt_grunt.wav` + 用户提供的 `Hurt_grunt_1/2.wav`，共 3 条随机 |
+| 死亡音效 | 用户提供的 `Isaac_dies_new.wav` / `_1` / `_2`（以撒 Wiki 角色音效） | 第 6 次点击起按概率随机；本地文件 `defaults/whale-audio/isaac_dies_new*.wav` |
 | 蜘蛛帧 | [HHHFFei/IsaacAnimation2Gif](https://github.com/HHHFFei/IsaacAnimation2Gif) 的 `gfx/monsters/classic/monster_080_spider.png` | 重新上色并做成 4 帧 GIF，本地文件 `defaults/whale-bubble-imgs/bimg_isaac_spider.gif` |
 | 基础插件 | [MeteorNOX/DeepSeek-Balance-Whale-Widget](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) | 代码 MIT；本仓库在其 0.4.2 基础上改角色、音效、泡泡与默认值 |
 | 原始灵感 | [小红书](https://xhslink.cn/o/6dsgqEKAm62) | 复刻目标 |
@@ -111,7 +119,7 @@ dsh plugin --profile web add github:komeiji-cobalt/dsh-isaac-widget
 ├─ assets/                 # 基础挂件前端 bundle + 少量兜底素材
 ├─ defaults/               # 首次安装自动写入 $DSH_HOME 的 Isaac 素材
 │  ├─ whale-roles/         # isaac.gif + roles.json
-│  ├─ whale-audio/         # hurt_grunt.wav + audio.json
+│  ├─ whale-audio/         # HurtGrunt ×3 + Isaac Dies ×3 + audio.json
 │  ├─ whale-bubble-imgs/   # bimg_isaac_spider.gif + bubble-imgs.json
 │  ├─ .dshw-size.json      # 默认大小/音效组
 │  └─ .dshw-bubble.json    # 默认蜘蛛泡泡

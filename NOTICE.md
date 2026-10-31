@@ -14,6 +14,11 @@ only for personal, non-commercial fan use:
   published by Nicalis; all rights remain with the respective owners.
 - `defaults/whale-audio/hurt_grunt.wav` — `File:Hurt grunt.wav` from
   The Binding of Isaac: Rebirth Wiki.
+- `defaults/whale-audio/hurt_grunt_1.wav`, `hurt_grunt_2.wav` — user-provided
+  `Hurt_grunt_1/2.wav`, same character voice source.
+- `defaults/whale-audio/isaac_dies_new.wav`, `isaac_dies_new_1.wav`,
+  `isaac_dies_new_2.wav` — user-provided `Isaac_dies_new*.wav`, same character
+  voice source.
 - `defaults/whale-bubble-imgs/bimg_isaac_spider.gif` — recolored and animated
   from `gfx/monsters/classic/monster_080_spider.png` in
   [HHHFFei/IsaacAnimation2Gif](https://github.com/HHHFFei/IsaacAnimation2Gif).
