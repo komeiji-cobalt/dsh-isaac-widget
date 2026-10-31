@@ -1,0 +1,12 @@
+# ============================================================================
+# dsh-isaac-widget —— DSH bundle patch
+# ============================================================================
+# 安装：
+#   dsh plugin --profile desktop add github:komeiji-cobalt/dsh-isaac-widget
+# 或本地开发：
+#   dsh plugin --profile desktop add link:<本目录绝对路径>
+# ============================================================================
+
+- insert:
+    - id: dsh-isaac-widget
+      name: dsh-isaac-widget

@@ -1,0 +1,17 @@
+{
+  "scale": 1.35,
+  "sound": true,
+  "vol": 0.85,
+  "soundSet": "isaac_grunt",
+  "usageMode": "ledger",
+  "peakMode": "default",
+  "bubbleOn": true,
+  "pressOn": true,
+  "turnCostOn": false,
+  "turnCostCloseMs": 5000,
+  "scrollGapOn": false,
+  "scrollGapPx": 17,
+  "menuBtnHide": false,
+  "codexStatsOn": false,
+  "updatedAt": "2026-10-31T05:37:56.000Z"
+}

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "roles": [
+    {
+      "id": "isaac",
+      "name": "以撒",
+      "format": "gif",
+      "pinnedAt": 1793425065293,
+      "createdAt": 1793425065293
+    }
+  ]
+}

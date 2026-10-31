@@ -1,0 +1,41 @@
+{
+  "name": "dsh-isaac-widget",
+  "version": "0.1.0",
+  "description": "以撒 DSH 小挂件：右下角透明 Isaac 动图，点击播放 HurtGrunt 并弹出蜘蛛思考泡泡；基于 dsh-whale-widget 魔改，支持角色/音效/泡泡自定义。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "isaac",
+    "binding-of-isaac",
+    "desktop-pet",
+    "widget"
+  ],
+  "type": "module",
+  "main": "lib/index.js",
+  "icon": "./icon.png",
+  "files": [
+    "lib",
+    "assets",
+    "defaults",
+    "icon.png",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE",
+    "NOTICE.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komeiji-cobalt/dsh-isaac-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/komeiji-cobalt/dsh-isaac-widget/issues"
+  },
+  "homepage": "https://github.com/komeiji-cobalt/dsh-isaac-widget#readme",
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT"
+}
