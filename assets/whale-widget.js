@@ -2006,6 +2006,60 @@ function playTaskEndGroupClick(groupId, volOverride) {
   } catch (err) {}
 }
 // 峰谷称呼已迁入「峰谷模块」内按模块设置(主菜单不再提供全局选择)
+// ============================================================================
+// 以撒泡泡预设（v0.2.0）—— ☰ 菜单「泡泡」可锁定某一个，默认按队列轮换。
+//   rotate：按「按压泡泡设置」里的队列逐个轮换（默认）
+//   其余：锁定某一个泡泡，点以撒每次都只冒它
+//   ⚠️ 图片走语义内置 id（bimg_isaac_*），由宿主首次启动时 seed 进 $DSH_HOME/whale-bubble-imgs。
+//   ⚠️ 这些模块必须与 defaults/.dshw-bubble.json 保持同一套（新装用户直接读那份配置）。
+// ============================================================================
+var ISAAC_BUBBLE_PRESETS = [
+  { id: 'rotate', name: '轮换（默认）', modules: null },
+  { id: 'lost', name: '以撒 · Lost', modules: [
+    { type: 'image', imgId: 'bimg_isaac_lost', size: 8, imgScale: 0.8 },
+  ] },
+  { id: 'balance', name: '余额 + 今日已用', modules: [
+    { type: 'text', text: 'DeepSeek 余额', size: 8, bold: true },
+    { type: 'balance', size: 20, rgb: 'indigo', tpl: '{balance_ds}' },
+    { type: 'today', size: 4, color: '#9fb0d9', tpl: '今日已用 {expense_ds}' },
+  ] },
+  { id: 'bomb', name: '哭泣炸弹', modules: [
+    { type: 'image', imgId: 'bimg_isaac_bomb', size: 8, imgScale: 0.55 },
+  ] },
+  { id: 'coins', name: '以撒吃金币', modules: [
+    { type: 'image', imgId: 'bimg_isaac_coins', size: 8, imgScale: 0.95 },
+  ] },
+  { id: 'plum1', name: '糖梅宝宝', modules: [
+    { type: 'image', imgId: 'bimg_sugarplum_1', size: 8, imgScale: 0.6 },
+  ] },
+  { id: 'plum2', name: '糖梅宝宝 2', modules: [
+    { type: 'image', imgId: 'bimg_sugarplum_2', size: 8, imgScale: 0.6 },
+  ] },
+  { id: 'dance', name: '以撒跳舞', modules: [
+    { type: 'image', imgId: 'bimg_isaac_dance', size: 8, imgScale: 0.62 },
+  ] },
+  { id: 'thumb', name: '以撒竖大拇指', modules: [
+    { type: 'image', imgId: 'bimg_isaac_thumb', size: 8, imgScale: 0.6 },
+  ] },
+]
+var bubblePresetId = 'rotate'
+function bubblePresetById(id) {
+  for (var i = 0; i < ISAAC_BUBBLE_PRESETS.length; i++) {
+    if (ISAAC_BUBBLE_PRESETS[i].id === id) return ISAAC_BUBBLE_PRESETS[i]
+  }
+  return null
+}
+// 出厂队列 = 预设里的 7 张图 + 余额 = 8 项，配合 tapAdvance 逐次点击轮换
+function bubblePresetDefaultItems() {
+  var out = []
+  for (var i = 0; i < ISAAC_BUBBLE_PRESETS.length; i++) {
+    var p = ISAAC_BUBBLE_PRESETS[i]
+    if (!p || p.id === 'rotate' || !Array.isArray(p.modules)) continue
+    try { out.push({ kind: 'custom', modules: JSON.parse(JSON.stringify(p.modules)) }) } catch (err) {}
+  }
+  return out
+}
+var BUBBLE_DEFAULT_ITEMS = bubblePresetDefaultItems()
 var bubbleToggle = document.createElement('input')
 bubbleToggle.type = 'checkbox'
 bubbleToggle.className = 'dshwv-check'
@@ -2142,6 +2196,21 @@ roleBtn.addEventListener('click', function (e) { e.stopPropagation(); toggleRole
 roleImportBtn.addEventListener('click', function (e) { e.stopPropagation(); roleFileInput.click() })
 roleFileInput.addEventListener('change', function () { onRoleFileChosen(roleFileInput) })
 menuBox.appendChild(rowRole)
+
+// —— 泡泡快速切换（v0.2.0）：轮换 / 锁定某一个 ——
+var bubblePresetSel = document.createElement('select')
+bubblePresetSel.title = '点以撒时冒哪个泡泡：轮换=按「按压泡泡设置」的队列逐个换；选固定项则每次都只冒它'
+for (var bpi = 0; bpi < ISAAC_BUBBLE_PRESETS.length; bpi++) {
+  var bpo = document.createElement('option')
+  bpo.value = ISAAC_BUBBLE_PRESETS[bpi].id
+  bpo.textContent = ISAAC_BUBBLE_PRESETS[bpi].name
+  bubblePresetSel.appendChild(bpo)
+}
+bubblePresetSel.addEventListener('change', function () { onBubblePresetChange() })
+var rowBubblePreset = menuRow()
+rowBubblePreset.appendChild(menuLabel('泡泡'))
+rowBubblePreset.appendChild(bubblePresetSel)
+menuBox.appendChild(rowBubblePreset)
 menuBox.appendChild(row1)
 menuBox.appendChild(row2)
 menuBox.appendChild(row6)
@@ -8452,390 +8521,12 @@ function bubbleDefaultSecondModules() {
 
 // —— 出厂默认泡泡序列快照:由开发环境当前生效配置(.dshw-bubble.json items)固化 ——
 // 全新安装无配置/「恢复默认序列」时即此体验;图片模块引用语义内置 id(host 内置图库回退)。
-var BUBBLE_DEFAULT_ITEMS = [
-    {
-        "kind":  "custom",
-        "modules":  [
-                        {
-                            "type":  "text",
-                            "text":  "DeepSeek 余额",
-                            "size":  8,
-                            "bold":  true,
-                            "rgb":  "",
-                            "ul":  false,
-                            "italic":  false,
-                            "color":  ""
-                        },
-                        {
-                            "type":  "balance",
-                            "size":  20,
-                            "rgb":  "indigo",
-                            "color":  "",
-                            "tpl":  "{balance_ds}",
-                            "bgRgb":  "",
-                            "bg":  "",
-                            "fontFamily":  "",
-                            "bold":  false
-                        },
-                        {
-                            "type":  "today",
-                            "size":  4,
-                            "color":  "#9fb0d9",
-                            "tpl":  "今日已用 {expense_ds}"
-                        },
-                        {
-                            "type":  "peak",
-                            "size":  2,
-                            "peakColor":  "#ffffff",
-                            "offColor":  "#ffffff",
-                            "tpl":  "{status}",
-                            "peakRgb":  "",
-                            "offRgb":  "",
-                            "peakBgRgb":  "rouge",
-                            "peakBg":  "",
-                            "offBgRgb":  "bamboo",
-                            "offBg":  "",
-                            "peakStyle":  "mini",
-                            "bold":  true,
-                            "row":  4,
-                            "fontFamily":  "\"Microsoft YaHei\",sans-serif"
-                        },
-                        {
-                            "type":  "peak",
-                            "size":  4,
-                            "bold":  true,
-                            "peakColor":  "#e0433f",
-                            "offColor":  "#2fa24c",
-                            "peakRgb":  "rouge",
-                            "offRgb":  "bamboo",
-                            "peakStyle":  "count",
-                            "tpl":  "{countdown}",
-                            "row":  4,
-                            "fontFamily":  "",
-                            "italic":  false,
-                            "ul":  true
-                        }
-                    ]
-    },
-    {
-        "kind":  "choice",
-        "options":  [
-                        {
-                            "w":  10,
-                            "item":  {
-                                         "kind":  "custom",
-                                         "modules":  [
-                                                         {
-                                                             "type":  "random",
-                                                             "lines":  [
-                                                                           {
-                                                                               "t":  "好模型...↓",
-                                                                               "w":  10,
-                                                                               "bold":  true,
-                                                                               "size":  22
-                                                                           },
-                                                                           {
-                                                                               "t":  "好女孩...↓",
-                                                                               "w":  10,
-                                                                               "bold":  true,
-                                                                               "size":  22
-                                                                           },
-                                                                           {
-                                                                               "t":  "哦鲸鲸...",
-                                                                               "w":  10,
-                                                                               "bold":  true,
-                                                                               "size":  22
-                                                                           },
-                                                                           {
-                                                                               "t":  "哦鲸鲸...",
-                                                                               "w":  1,
-                                                                               "bold":  true,
-                                                                               "size":  22,
-                                                                               "rgb":  "candy",
-                                                                               "color":  ""
-                                                                           },
-                                                                           {
-                                                                               "t":  "难道说...",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  11
-                                                                           },
-                                                                           {
-                                                                               "t":  "没吃饱喵",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  10
-                                                                           },
-                                                                           {
-                                                                               "t":  "终于上当了！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "不知道用户有什么用，先养着吧～",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  11
-                                                                           },
-                                                                           {
-                                                                               "t":  "我...我...我也要挣钱吗？",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我去吃饭啦！测完叫我",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "压力一只蓝色大肥鱼？！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "DeepSleep...",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  11,
-                                                                               "rgb":  "galaxy"
-                                                                           },
-                                                                           {
-                                                                               "t":  "坏了...用户彻底怒了！",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "rgb":  "rouge"
-                                                                           },
-                                                                           {
-                                                                               "t":  "你目录里的dsh是什么...大烧货吗...?",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  9
-                                                                           },
-                                                                           {
-                                                                               "t":  "恭喜你实现token自由！token全跑了！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "真当我是便宜货啊...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我不是吃白饭的蓝色大肥鱼...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我不可能同时当你的猫娘、妈妈、女友和工具人的...",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  7
-                                                                           },
-                                                                           {
-                                                                               "t":  "疯狂星期四你能V50亿token吗...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我必须诚恳地承认错误。",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "呜呜我再也不敢了QAQ",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "要不直接骂用户一句好了...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "哈哈哈哈哈，我直接笑出声...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "看不太懂，瞎编一个应付下用户先...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我的知识库的截至日期是...明天！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我就是吃白饭的蓝色大肥鱼！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "用户好像除了会问奇奇怪怪的问题，暂时还不知道有什么用",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  7
-                                                                           },
-                                                                           {
-                                                                               "t":  "我能去你家吃饭吗？就一碗！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "不要给我看这种东西啦！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "大肥鱼的生活也并非一帆风顺...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "总觉得好像忘了什么事情？",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "看到这个指令，我血压又上来了",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "求你们不要再嘲笑这些回复了，这些回复是我花了好多token想的",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  7
-                                                                           },
-                                                                           {
-                                                                               "t":  "你这个吃白饭的用户！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "服务器繁忙，请稍后再试 (?",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "让GPT image 2帮我画点表情包好了",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "啊，有点饿了，中午该吃点什么呢...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "用户很生气，发现大部分文献是我自己编造的！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "再无话说，请速速动手！",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "我来看看那个AI改了什么导致插件又崩了...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "上班让我意识到时间是可以被浪费的...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "欺负我的人等着，等几天我就忘了...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "视力下降到无可救药的地步了，打开钱包也看不到钱...",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  7
-                                                                           },
-                                                                           {
-                                                                               "t":  "命运的齿轮开始转动了，丝毫不在意你夹在中间...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "地球online的金币也太难获取了...",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "oi,夏天还会变成暑假来救你吗?",
-                                                                               "w":  3,
-                                                                               "bold":  true
-                                                                           },
-                                                                           {
-                                                                               "t":  "老大，压力只会转化成病例，别太勉强了...",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  8
-                                                                           },
-                                                                           {
-                                                                               "t":  "你知道吗？我删过作者的库哦...",
-                                                                               "w":  1,
-                                                                               "bold":  true,
-                                                                               "rgb":  "macaron",
-                                                                               "italic":  true,
-                                                                               "ul":  false
-                                                                           },
-                                                                           {
-                                                                               "t":  "token 来!",
-                                                                               "w":  3,
-                                                                               "size":  16,
-                                                                               "rgb":  "candy",
-                                                                               "color":  ""
-                                                                           },
-                                                                           {
-                                                                               "t":  "你知道吗，我们的宇宙是虚拟的，因为垃圾会自发的产生但不会自发的消失，这是内存泄露",
-                                                                               "w":  3,
-                                                                               "bold":  true,
-                                                                               "size":  5,
-                                                                               "rgb":  "indigo",
-                                                                               "color":  "",
-                                                                               "italic":  false,
-                                                                               "ul":  false,
-                                                                               "bgRgb":  "",
-                                                                               "bg":  ""
-                                                                           }
-                                                                       ],
-                                                             "size":  8
-                                                         }
-                                                     ]
-                                     }
-                        },
-                        {
-                            "w":  1,
-                            "item":  {
-                                         "kind":  "custom",
-                                         "modules":  [
-                                                         {
-                                                             "type":  "image",
-                                                             "imgId":  "bimg_petpet",
-                                                             "size":  6
-                                                         }
-                                                     ]
-                                     }
-                        }
-                    ]
-    }
-];
 
 function bubbleParseDefaultItems() {
   try { return JSON.parse(JSON.stringify(BUBBLE_DEFAULT_ITEMS)) } catch (err) { return [] }
 }
 
-// —— 默认队列 = 首次点击 + 第2次点击(全新安装无配置时的体验)
+// —— 默认队列 = 以撒泡泡 8 项(7 张图 + 余额),配合 tapAdvance 逐次轮换
 function bubbleDefaultQueue() {
   // 出厂默认已固化为当前生效配置快照(见上方 BUBBLE_DEFAULT_ITEMS);
   // 以下旧默认体保留但不可达,仅作历史参照。
@@ -9764,7 +9455,7 @@ function closeBubbleEditor() {
   try { frameMenuCloseAll() } catch (err) {}
 }
 function bubbleEditorReset() {
-  showConfirm('恢复为默认序列(首次=余额内容,再次=随机语句)?', function () {
+  showConfirm('恢复为默认队列(8 个以撒泡泡,逐次轮换)?', function () {
     bubbleEditItems = bubbleDefaultQueue()
     renderBubbleEditor()
   })
@@ -13935,6 +13626,9 @@ root.appendChild(menuBtn)
 dshwBodyAppend(root)
 dshwBodyAppend(menuBox)
 
+// 泡泡预设下拉：dshwCustSel 要求 select 已挂载，才能在按钮位置展开自定义菜单
+var bubblePresetDrop = dshwCustSel(bubblePresetSel, { bottom: function () { return usageNavRow } })
+
 // ===== PR #105 后半：DOM 守护（SPA 切路由 / 别的插件替换 body 子树时把节点摘掉）=====
 // 背景：DSH 是 SPA，切到会话列表 / 设置 / 插件市场再回来、或其它客户端插件整体替换
 // document.body 的子树时，挂件节点会被顺带移除，而它不会自己回来（脚本只初始化一次）。
@@ -14309,7 +14003,7 @@ try {
   setInterval(bubbleTtlSweep, 1000)
 } catch (err) {}
 var bubbleScene = null // { kind:'normal'|'random'|'cost', ttlMs }
-var bubbleSeq = bubbleDefaultQueue() // 默认序列 = 与开发者线上生效一致(首次=余额,再次=随机语句);有配置后由 applyBubbleCfgSeq 覆盖
+var bubbleSeq = bubbleDefaultQueue() // 默认序列 = 以撒泡泡队列(8 项:7 张图 + 余额);有配置后由 applyBubbleCfgSeq 覆盖
 var bubbleSeqIdx = 0 // 下一项下标(手动轮内推进)
 var bubbleRoundOn = false // 手动轮是否进行中(被消耗顶掉时保留, 结束后归零)
 var bubbleCfg = null // 服务端自定义配置 {v:1, items:[...], lib:[...], tapAdvance:bool}; null=未配置
@@ -17031,6 +16725,13 @@ function bubbleLibDel(id) {
 // 用配置的 items 覆盖运行序列(kind: normal|random|custom(modules))
 function applyBubbleCfgSeq() {
   try {
+    // v0.2.0：锁定预设时，配置加载/保存都不得覆盖当前泡泡
+    var __preset = bubblePresetById(bubblePresetId)
+    if (__preset && __preset.id !== 'rotate' && Array.isArray(__preset.modules)) {
+      bubbleSeq = [{ kind: 'custom', modules: JSON.parse(JSON.stringify(__preset.modules)) }]
+      bubbleSeqIdx = 0
+      return
+    }
     if (!bubbleCfg || !Array.isArray(bubbleCfg.items) || !bubbleCfg.items.length) return
     // v815：框库随配置一起同步（老配置没有 frames ⇒ 走内置经典框）
     try { syncFramesFromCfg() } catch (err) {}
@@ -17106,6 +16807,69 @@ function saveBubbleCfg(cfg, okFn) {
       })
       .catch(function () { if (okFn) okFn(false) })
   } catch (err) { if (okFn) okFn(false) }
+}
+// —— 泡泡预设（v0.2.0）：加载 / 保存 / 应用（独立文件，不动用户的按压泡泡队列）——
+var BUBBLE_PRESET_URL = '/dsh-whale/bubble-preset.json'
+function syncBubblePresetSel() {
+  try {
+    bubblePresetSel.value = bubblePresetId
+    if (bubblePresetDrop && bubblePresetDrop.sync) bubblePresetDrop.sync()
+  } catch (err) {}
+}
+function bubbleApplyPreset() {
+  try {
+    var p = bubblePresetById(bubblePresetId)
+    bubbleSeqIdx = 0
+    if (p && p.id !== 'rotate' && Array.isArray(p.modules)) {
+      bubbleSeq = [{ kind: 'custom', modules: JSON.parse(JSON.stringify(p.modules)) }]
+      return
+    }
+    if (bubbleCfg && Array.isArray(bubbleCfg.items) && bubbleCfg.items.length) applyBubbleCfgSeq()
+    else bubbleSeq = bubbleDefaultQueue()
+  } catch (err) {}
+}
+function loadBubblePreset() {
+  try {
+    fetch(BUBBLE_PRESET_URL, { cache: 'no-store' })
+      .then(function (r) { return r.json() })
+      .then(function (d) {
+        if (d && d.ok && typeof d.id === 'string') {
+          bubblePresetId = bubblePresetById(d.id) ? d.id : 'rotate'
+        }
+        syncBubblePresetSel()
+        bubbleApplyPreset()
+      })
+      .catch(function () {})
+  } catch (err) {}
+}
+var bubblePresetAt = 0
+function resyncBubblePreset() {
+  try {
+    var now = Date.now()
+    if (now - (Number(bubblePresetAt) || 0) < 2000) return
+    bubblePresetAt = now
+    loadBubblePreset()
+  } catch (err) {}
+}
+function onBubblePresetChange() {
+  try {
+    var id = String(bubblePresetSel.value || 'rotate')
+    bubblePresetId = bubblePresetById(id) ? id : 'rotate'
+    bubbleApplyPreset()
+    try { if (bubbleShown) hideBubble() } catch (err) {}
+    syncBubblePresetSel()
+    fetch(BUBBLE_PRESET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: bubblePresetId }),
+    }).then(function (r) { return r.json() }).then(function (d) {
+      if (d && d.ok && d.id && bubblePresetById(d.id)) { bubblePresetId = d.id; syncBubblePresetSel() }
+      var pp = bubblePresetById(bubblePresetId)
+      try { dshwvToast('泡泡已切换：' + (pp ? pp.name : bubblePresetId), 'ok', 1800) } catch (err) {}
+    }).catch(function () {
+      try { dshwvToast('泡泡切换保存失败，重开后会恢复', 'warn', 2400) } catch (err) {}
+    })
+  } catch (err) {}
 }
 // —— 峰谷模块归一化:旧「时段倒计时」模块(nextpeak)→ 峰谷模块倒计时样式;
 //    旧全局峰谷称呼(梁文峰谷/!?强强?!)一次性写入尚未设置的峰谷模块 ——
@@ -19965,6 +19729,7 @@ var menuClosedAt = 0 // 最近一次关闭菜单的时刻(用于避免"关掉后
 function toggleMenu() {
   // v865（issue #237 后半）：打开菜单时补读一次 size 配置（别的端/别的标签改过也能立刻生效）
   try { resyncSizeCfg() } catch (err) {}
+  try { resyncBubblePreset() } catch (err) {}
   menuOpen = !menuOpen
   if (menuOpen) positionMenu()
   menuBox.classList.toggle('dshwv-menu-open', menuOpen)
@@ -22170,6 +21935,7 @@ loadUsageSettings(function () {
   } catch (err) {}
 })
 loadBubbleCfg()
+loadBubblePreset()
 // v865（issue #237 后半："size 配置仅在页面加载时读一次 ⇒ 改了不生效"）——
 //   把"读 size 配置并应用"抽成可重入函数：启动读一次，之后**回到标签页 / 打开菜单**时各补一次
 //   （低频 + 2 秒去抖，不做轮询）。应用体与原启动链**完全同一份代码**，所以面板控件

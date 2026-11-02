@@ -6,13 +6,102 @@
       "modules": [
         {
           "type": "image",
-          "imgId": "bimg_isaac_spider",
+          "imgId": "bimg_isaac_lost",
+          "size": 8,
+          "imgScale": 0.8
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "text",
+          "text": "DeepSeek 余额",
+          "size": 8,
+          "bold": true
+        },
+        {
+          "type": "balance",
+          "size": 20,
+          "rgb": "indigo",
+          "tpl": "{balance_ds}"
+        },
+        {
+          "type": "today",
+          "size": 4,
+          "color": "#9fb0d9",
+          "tpl": "今日已用 {expense_ds}"
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "image",
+          "imgId": "bimg_isaac_bomb",
           "size": 8,
           "imgScale": 0.55
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "image",
+          "imgId": "bimg_isaac_coins",
+          "size": 8,
+          "imgScale": 0.95
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "image",
+          "imgId": "bimg_sugarplum_1",
+          "size": 8,
+          "imgScale": 0.6
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "image",
+          "imgId": "bimg_sugarplum_2",
+          "size": 8,
+          "imgScale": 0.6
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "image",
+          "imgId": "bimg_isaac_dance",
+          "size": 8,
+          "imgScale": 0.62
+        }
+      ]
+    },
+    {
+      "kind": "custom",
+      "modules": [
+        {
+          "type": "image",
+          "imgId": "bimg_isaac_thumb",
+          "size": 8,
+          "imgScale": 0.6
         }
       ]
     }
   ],
   "lib": [],
-  "tapAdvance": false
+  "tapAdvance": true
 }

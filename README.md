@@ -1,12 +1,12 @@
 # dsh-isaac-widget
 
-> 以撒住进 DeepSeek Harness 的右下角。透明像素动图、点击随机 `HurtGrunt`（点多了变 Isaac Dies 呃啊）、抬头冒出一只蜘蛛的思考泡泡。
+> 以撒住进 DeepSeek Harness 的右下角。透明像素动图、点击随机 `HurtGrunt`（点多了变 Isaac Dies 呃啊）、点一下冒一个以撒主题泡泡（Lost / 余额 / 哭泣炸弹 / 吃金币 / 糖梅宝宝 / 跳舞 / 竖大拇指）。
 >
 > 复刻自小红书：<https://xhslink.cn/o/6dsgqEKAm62>
 
 ![效果预览](docs/preview.png)
 
-**Release 下载**：[`dsh-isaac-widget-0.1.1.zip`](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases/download/v0.1.1/dsh-isaac-widget-0.1.1.zip) · [全部 Releases](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
+**Releases**：[全部版本](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
 
 ## 它是什么
 
@@ -14,10 +14,27 @@
 
 - **主形象**：512×400 透明 Isaac GIF，抱着笔记本
 - **点击音**：前 5 次从 `HurtGrunt` 1/2/原版里随机；第 6 次起按递增概率随机播放 `Isaac Dies New` 1/2/3，播完一条死亡音后计数归零
-- **点击泡泡**：白色思考泡泡 + 一只红色蜘蛛（4 帧小动画）
+- **点击泡泡**：8 个以撒主题泡泡（Lost / 余额 / 哭泣炸弹 / 吃金币 / 糖梅宝宝 ×2 / 跳舞 / 竖大拇指），默认逐次点击轮换，菜单里可锁定某一个
 - **位置**：右下角，默认留 12px / 8px 边距
 - **可改**：角色图、按压音效、泡泡内容、大小、吸附、余额显示等
-- 原插件的余额 / 记账能力保留，但默认关闭了每轮消耗提示，避免打扰
+- 原插件的余额 / 记账能力保留，默认**开启**每轮消耗提示（菜单 → 音效与提示 → 全局设置里可关）
+
+### 点击泡泡（8 个）
+
+点击以撒冒一个泡泡；**默认按队列轮换**（点一下换一个）。鼠标移到以撒 → `☰` → **泡泡** 下拉，可锁定某一个（如「余额 + 今日已用」），选回「轮换（默认）」恢复逐个切换。
+
+| 预设 | 内容 |
+|---|---|
+| Lost | 以撒 · Lost 动图 |
+| 余额 + 今日已用 | DeepSeek 余额 + 今日消耗（可配合「每轮消耗提示」） |
+| 哭泣炸弹 | 32×32 哭泣炸弹动图（放大 4× 显示） |
+| 以撒吃金币 | 金币条动图 |
+| 糖梅宝宝 | Sugar Plum 动图 |
+| 糖梅宝宝 2 | Sugar Plum 另一套动作 |
+| 以撒跳舞 | 以撒待机/跳舞动图 |
+| 以撒竖大拇指 | 以撒点赞动图 |
+
+想改轮换顺序或加自己的图：`☰ → 按压泡泡设置`（队列里就是这 8 项）。
 
 ### 随机点击音
 
@@ -39,7 +56,7 @@
 2. 否则克隆仓库，在仓库根目录执行：
    powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -Profile desktop
 3. 不要强制结束正在运行的 DSH；安装完成后告诉我“需要完全退出 DSH（含托盘）再重开”。
-4. 重开后确认：右下角出现以撒；点击后出现蜘蛛思考泡泡，并随机播放 HurtGrunt；多点几下会随机变成 Isaac Dies 的“呃啊”。
+4. 重开后确认：右下角出现以撒；点击后冒出以撒主题泡泡（默认轮换：Lost → 余额 → 哭泣炸弹 → 吃金币 → 糖梅宝宝 ×2 → 跳舞 → 竖大拇指），并随机播放 HurtGrunt；多点几下会随机变成 Isaac Dies 的“呃啊”。
 ```
 
 Windows 上也可以直接跑远程脚本：
@@ -77,7 +94,7 @@ dsh plugin --profile web add github:komeiji-cobalt/dsh-isaac-widget
 
 重启 `dsh web`，浏览器 `Ctrl+F5`。
 
-> 首次启动时插件会把 `defaults/` 里的 Isaac、HurtGrunt、蜘蛛泡泡合并进 `$DSH_HOME`（默认 `~/.dsh`）。已有用户配置不会被覆盖。
+> 首次启动时插件会把 `defaults/` 里的 Isaac、HurtGrunt、7 张泡泡图合并进 `$DSH_HOME`（默认 `~/.dsh`）。已有用户配置不会被覆盖（图库是合并，不删你的图）。
 
 ## 安装后怎么玩
 
@@ -86,13 +103,14 @@ dsh plugin --profile web add github:komeiji-cobalt/dsh-isaac-widget
 | 菜单 | 作用 |
 |---|---|
 | **角色** | 切换/导入角色图；当前角色是「以撒」 |
+| **泡泡** | 点击泡泡快速切换：轮换（默认）/ Lost / 余额 / 哭泣炸弹 / 吃金币 / 糖梅宝宝 ×2 / 跳舞 / 竖大拇指 |
 | **大小** | 整体缩放 |
 | **音效与提示 → 全局设置** | 按压音效组、音量、任务结束音等 |
 | **按压泡泡设置** | 编辑点击泡泡：文字、余额、图片、随机图片等 |
 | **资源管理** | 查看/删除角色图、泡泡图、音频片段 |
 | **吸附与翻转** | 四边吸附、贴边距离 |
 
-点击以撒：播放 `HurtGrunt`，并弹出蜘蛛泡泡。再点一下收起。
+点击以撒：播放 `HurtGrunt`，并冒出一个泡泡（默认轮换，见上）。再点一下收起/换下一个。
 
 ## 资源来源
 
@@ -101,14 +119,14 @@ dsh plugin --profile web add github:komeiji-cobalt/dsh-isaac-widget
 | 主形象 | [Pinterest / GIPHY：Angry The Binding Of Isaac Sticker](https://www.pinterest.com/pin/676665912796172781/) | 512×400 透明 GIF，本地文件 `defaults/whale-roles/isaac.gif` |
 | 点击音效 | [The Binding of Isaac: Rebirth Wiki — File:Hurt grunt.wav](https://bindingofisaacrebirth.wiki.gg/wiki/File:Hurt_grunt.wav) | `hurt_grunt.wav` + 用户提供的 `Hurt_grunt_1/2.wav`，共 3 条随机 |
 | 死亡音效 | 用户提供的 `Isaac_dies_new.wav` / `_1` / `_2`（以撒 Wiki 角色音效） | 第 6 次点击起按概率随机；本地文件 `defaults/whale-audio/isaac_dies_new*.wav` |
-| 蜘蛛帧 | [HHHFFei/IsaacAnimation2Gif](https://github.com/HHHFFei/IsaacAnimation2Gif) 的 `gfx/monsters/classic/monster_080_spider.png` | 重新上色并做成 4 帧 GIF，本地文件 `defaults/whale-bubble-imgs/bimg_isaac_spider.gif` |
+| 泡泡图（7 张） | 用户提供的 `66599.gif`（Lost）、`Entity_4.7.gif`（哭泣炸弹）、`loading_1.gif`（吃金币）、`baby-plum-the-binding-of-isaac.gif`、`giphy.gif`（糖梅宝宝 ×2）、`the-binding-of-isaac-tboi.gif`（跳舞）、`the-binding-of-isaac-isaac.gif`（竖大拇指） | 统一转为 `defaults/whale-bubble-imgs/bimg_*.gif`；哭泣炸弹为便于显示放大了 4×（最近邻） |
 | 基础插件 | [MeteorNOX/DeepSeek-Balance-Whale-Widget](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget) | 代码 MIT；本仓库在其 0.4.2 基础上改角色、音效、泡泡与默认值 |
 | 原始灵感 | [小红书](https://xhslink.cn/o/6dsgqEKAm62) | 复刻目标 |
 
 ## 许可与声明
 
 - **代码**：MIT，见 [LICENSE](LICENSE)。原插件版权归 MeteorNOX；本仓库的修改部分归 komeiji-cobalt。
-- **以撒相关素材**（角色图、音效、蜘蛛帧）版权归 Edmund McMillen / Nicalis 及原素材作者所有，这里仅用于**个人、非商业的粉丝二创**，不随 MIT 授权再许可。
+- **以撒相关素材**（角色图、音效、泡泡图）版权归 Edmund McMillen / Nicalis 及原素材作者所有，这里仅用于**个人、非商业的粉丝二创**，不随 MIT 授权再许可。
 - 本项目与 DeepSeek、Nicalis、Edmund McMillen 均无隶属关系。
 - 如果你是权利人并希望移除某份素材，请开 issue，我会尽快删除。
 
@@ -120,9 +138,9 @@ dsh plugin --profile web add github:komeiji-cobalt/dsh-isaac-widget
 ├─ defaults/               # 首次安装自动写入 $DSH_HOME 的 Isaac 素材
 │  ├─ whale-roles/         # isaac.gif + roles.json
 │  ├─ whale-audio/         # HurtGrunt ×3 + Isaac Dies ×3 + audio.json
-│  ├─ whale-bubble-imgs/   # bimg_isaac_spider.gif + bubble-imgs.json
-│  ├─ .dshw-size.json      # 默认大小/音效组
-│  └─ .dshw-bubble.json    # 默认蜘蛛泡泡
+│  ├─ whale-bubble-imgs/   # 7 张以撒泡泡图（bimg_*.gif）+ bubble-imgs.json
+│  ├─ .dshw-size.json      # 默认大小/音效组（每轮消耗提示默认开）
+│  └─ .dshw-bubble.json    # 默认泡泡队列（8 项，tapAdvance 逐次轮换）
 ├─ lib/                    # 宿主半侧（含 defaults 首次写入逻辑）
 ├─ docs/preview.png        # README 预览图
 ├─ icon.png
@@ -151,5 +169,8 @@ dsh plugin --profile desktop add "link:$PWD"
 **想换回小鲸鱼？**
 `☰ → 角色 → 小鲸鱼`；或删掉 `~/.dsh/whale-roles/roles.json` 里的 `isaac` 条目。
 
+**想固定某个泡泡 / 泡泡不出现？**
+`☰ → 泡泡` 里选「轮换（默认）」或锁定某一项；若刚升级过插件，需**完全退出 DSH 再重开**（客户端注入只在启动时收集）。
+
 **会不会很吵？**
-默认只在点击时响 `HurtGrunt`，每轮消耗提示已关闭。若听到连续声音，检查是否有别的页面/实例在反复点击挂件。
+默认只在点击时响 `HurtGrunt`；每轮消耗提示默认开启（只显示金额，不发声），可在 `☰ → 音效与提示 → 全局设置` 里关掉。若听到连续声音，检查是否有别的页面/实例在反复点击挂件。

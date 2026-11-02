@@ -19,9 +19,10 @@ only for personal, non-commercial fan use:
 - `defaults/whale-audio/isaac_dies_new.wav`, `isaac_dies_new_1.wav`,
   `isaac_dies_new_2.wav` — user-provided `Isaac_dies_new*.wav`, same character
   voice source.
-- `defaults/whale-bubble-imgs/bimg_isaac_spider.gif` — recolored and animated
-  from `gfx/monsters/classic/monster_080_spider.png` in
-  [HHHFFei/IsaacAnimation2Gif](https://github.com/HHHFFei/IsaacAnimation2Gif).
+- `defaults/whale-bubble-imgs/bimg_*.gif` — seven The Binding of Isaac bubble
+  GIFs (Lost, crying bomb, coin-eating, Sugar Plum ×2, dancing, thumbs-up),
+  user-provided and used as-is (the 32×32 crying bomb is upscaled 4× with
+  nearest-neighbour so it stays visible).
 
 No affiliation with DeepSeek, Nicalis, Edmund McMillen, or the original asset
 authors is claimed. If you are a rights holder and want an asset removed, open

@@ -7,7 +7,7 @@
   "peakMode": "default",
   "bubbleOn": true,
   "pressOn": true,
-  "turnCostOn": false,
+  "turnCostOn": true,
   "turnCostCloseMs": 5000,
   "scrollGapOn": false,
   "scrollGapPx": 17,
