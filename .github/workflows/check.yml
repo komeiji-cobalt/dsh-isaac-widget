@@ -14,6 +14,8 @@ jobs:
           node-version: '22'
       - name: Check host module syntax
         run: node --check lib/index.js
+      - name: Check client bundle syntax
+        run: node --check assets/whale-widget.js
       - name: Validate manifests and defaults
         run: |
           node -e "for (const f of ['package.json','defaults/.dshw-size.json','defaults/.dshw-bubble.json','defaults/whale-roles/roles.json','defaults/whale-audio/audio.json','defaults/whale-bubble-imgs/bubble-imgs.json']) JSON.parse(require('fs').readFileSync(f,'utf8')); console.log('json ok')"

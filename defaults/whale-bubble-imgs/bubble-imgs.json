@@ -2,10 +2,46 @@
   "version": 1,
   "images": [
     {
-      "id": "bimg_isaac_spider",
-      "name": "以撒·蜘蛛",
+      "id": "bimg_isaac_lost",
+      "name": "以撒·Lost",
       "format": "gif",
-      "createdAt": 1793425065293
+      "createdAt": 1793583344475
+    },
+    {
+      "id": "bimg_isaac_bomb",
+      "name": "以撒·哭泣炸弹",
+      "format": "gif",
+      "createdAt": 1793583344475
+    },
+    {
+      "id": "bimg_isaac_coins",
+      "name": "以撒·吃金币",
+      "format": "gif",
+      "createdAt": 1793583344475
+    },
+    {
+      "id": "bimg_sugarplum_1",
+      "name": "糖梅宝宝",
+      "format": "gif",
+      "createdAt": 1793583344475
+    },
+    {
+      "id": "bimg_sugarplum_2",
+      "name": "糖梅宝宝 2",
+      "format": "gif",
+      "createdAt": 1793583344475
+    },
+    {
+      "id": "bimg_isaac_dance",
+      "name": "以撒·跳舞",
+      "format": "gif",
+      "createdAt": 1793583344475
+    },
+    {
+      "id": "bimg_isaac_thumb",
+      "name": "以撒·竖大拇指",
+      "format": "gif",
+      "createdAt": 1793583344475
     }
   ]
 }

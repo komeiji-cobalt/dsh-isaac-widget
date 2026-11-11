@@ -1,7 +1,7 @@
 {
   "name": "dsh-isaac-widget",
-  "version": "0.1.2",
-  "description": "以撒 DSH 小挂件：右下角透明 Isaac 动图，点击播放 HurtGrunt 并弹出蜘蛛思考泡泡；基于 dsh-whale-widget 魔改，支持角色/音效/泡泡自定义。",
+  "version": "0.2.0",
+  "description": "以撒 DSH 小挂件：右下角透明 Isaac 动图，点击播放 HurtGrunt 并冒出以撒主题泡泡（Lost / 余额 / 哭泣炸弹 / 吃金币 / 糖梅宝宝 / 跳舞 / 竖大拇指）；基于 dsh-whale-widget 魔改，支持角色/音效/泡泡自定义。",
   "keywords": [
     "dsh",
     "dsh-plugin",
