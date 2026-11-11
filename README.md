@@ -6,7 +6,7 @@
 
 ![效果预览](docs/preview.png)
 
-**Release 下载**：[`dsh-isaac-widget-0.1.1.zip`](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases/download/v0.1.1/dsh-isaac-widget-0.1.1.zip) · [全部 Releases](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
+**Release 下载**：[`dsh-isaac-widget-0.1.2.zip`](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases/download/v0.1.2/dsh-isaac-widget-0.1.2.zip) · [全部 Releases](https://github.com/komeiji-cobalt/dsh-isaac-widget/releases)
 
 ## 它是什么
 
@@ -18,6 +18,13 @@
 - **位置**：右下角，默认留 12px / 8px 边距
 - **可改**：角色图、按压音效、泡泡内容、大小、吸附、余额显示等
 - 原插件的余额 / 记账能力保留，但默认关闭了每轮消耗提示，避免打扰
+
+### 上游同步
+
+- 上游：[`MeteorNOX/DeepSeek-Balance-Whale-Widget`](https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget)
+- 基线：**v0.4.2**（upstream `main` @ `5247dd6`，2026-10-11）
+- 2026-11-11 复查：上游 `main` 没有新提交，npm `0.4.2` tarball 也未变；本 fork 的宿主/客户端代码已与该基线一致
+- v0.1.2 补回之前瘦身时删掉的 `assets/bubble-money1.gif` 和 `assets/DSniang02.png`，避免恢复默认泡泡/角色时 404
 
 ### 随机点击音
 
